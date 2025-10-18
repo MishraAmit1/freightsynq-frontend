@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import DotGrid from "@/components/ui/dot-grid";
-
 export default function Hero() {
   const words = ["simple.", "organized.", "automated."];
 
