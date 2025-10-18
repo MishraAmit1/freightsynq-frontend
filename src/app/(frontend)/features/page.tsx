@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
 import {
   Card,
   CardContent,
@@ -26,8 +28,10 @@ import {
   IndianRupee,
   CheckCircle2,
   XCircle,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 
 const modules = [
   {
@@ -164,42 +168,125 @@ const faqs = [
 ];
 
 export default function FeaturesPage() {
+  const heroRef = useRef(null);
+  const modulesRef = useRef(null);
+  const workflowRef = useRef(null);
+  const comparisonRef = useRef(null);
+  const faqRef = useRef(null);
+  const ctaRef = useRef(null);
+
+  const heroInView = useInView(heroRef, { once: true, margin: "0px", amount: 0.3 });
+  const modulesInView = useInView(modulesRef, { once: true, margin: "0px", amount: 0.1 });
+  const workflowInView = useInView(workflowRef, { once: true, margin: "0px", amount: 0.2 });
+  const comparisonInView = useInView(comparisonRef, { once: true, margin: "0px", amount: 0.2 });
+  const faqInView = useInView(faqRef, { once: true, margin: "0px", amount: 0.2 });
+  const ctaInView = useInView(ctaRef, { once: true, margin: "0px", amount: 0.3 });
+
   return (
     <div className="min-h-screen">
-      {/* Hero Section - SMALLER */}
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16 md:py-24">
+      {/* Hero Section */}
+      <div ref={heroRef} className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16 md:py-24 overflow-hidden">
         <div className="container max-w-7xl px-4 md:px-8">
           <div className="max-w-3xl">
-            <h1 className="text-white text-4xl md:text-6xl font-bold font-headline tracking-tight">
-              One Platform, <br />
-              <span className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] bg-clip-text text-transparent">
-                Every Function
+            <motion.h1
+              className="text-white text-4xl md:text-6xl font-bold font-headline tracking-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <motion.span
+                className="block"
+                initial={{ opacity: 0, x: -20 }}
+                animate={heroInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                One Platform,
+              </motion.span>
+              <span className="relative inline-block">
+                <motion.span
+                  className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] bg-clip-text text-transparent font-black"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  Every Function
+                </motion.span>
+                {/* Nike Swoosh */}
+                <svg
+                  className="absolute -bottom-3 left-0 w-full h-8 z-0"
+                  viewBox="0 0 300 30"
+                  preserveAspectRatio="none"
+                >
+                  <motion.path
+                    d="M 0 20 Q 75 8, 150 12 T 300 8"
+                    stroke="url(#hero-gradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={heroInView ? { pathLength: 1 } : { pathLength: 0 }}
+                    transition={{ duration: 2, ease: "easeInOut", delay: 1 }}
+                  />
+                  <defs>
+                    <linearGradient id="hero-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#FF6B35" />
+                      <stop offset="100%" stopColor="#FF8C42" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Sparkle */}
+                <motion.span
+                  className="absolute -top-2 -right-3 inline-block"
+                  initial={{ scale: 0, rotate: 0 }}
+                  animate={heroInView ? { scale: 1, rotate: 360 } : {}}
+                  transition={{ duration: 0.6, delay: 1.4, type: "spring" }}
+                >
+                  <Sparkles className="w-5 h-5 text-[#FF8C42]" />
+                </motion.span>
               </span>
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-gray-300 leading-relaxed">
+            </motion.h1>
+
+            <motion.p
+              className="mt-6 text-lg md:text-xl text-gray-300 leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={heroInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
               Freight Sync is built as a modular platform, allowing you to choose
               the tools you need to solve your most critical operational
               challenges.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            </motion.p>
+
+            <motion.div
+              className="mt-8 flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 1 }}
+            >
               <Button size="lg" asChild className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42]">
                 <Link href="/contact">
                   Start Free Trial
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="border-white text-black hover:bg-white/10 hover:text-white">
+              <Button size="lg" variant="outline" asChild className="border-white hover:text-white hover:bg-white/10">
                 <Link href="/pricing">View Pricing</Link>
               </Button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
 
       {/* Core Modules Section */}
-      <div className="py-20 md:py-32 bg-gray-50">
+      <div ref={modulesRef} className="py-20 md:py-32 bg-gray-50 overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 md:px-8">
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={modulesInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
             <h2 className="text-3xl md:text-5xl font-bold font-headline mb-4">
               Powerful Modules That Work Together
             </h2>
@@ -207,76 +294,126 @@ export default function FeaturesPage() {
               Each module is designed to solve specific transport challenges while seamlessly
               integrating with others for complete operational control.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {modules.map((mod) => (
-              <Card
+            {modules.map((mod, index) => (
+              <motion.div
                 key={mod.title}
-                className="group bg-white shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col border-2 border-transparent hover:border-[#FF6B35]/20 h-full"
+                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                animate={modulesInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.4 + (index * 0.15),
+                  ease: "easeOut"
+                }}
+                whileHover={{ y: -8, scale: 1.02 }}
               >
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="p-4 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-xl w-fit mb-4 group-hover:from-[#FF6B35]/20 group-hover:to-[#FF8C42]/20 transition-colors">
-                      {mod.icon}
+                <Card className="group bg-white shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col border-2 border-transparent hover:border-[#FF6B35]/20 h-full">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between">
+                      <motion.div
+                        className="p-4 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-xl w-fit mb-4"
+                        whileHover={{ rotate: 360, scale: 1.1 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        {mod.icon}
+                      </motion.div>
+                      <motion.span
+                        className="text-xs font-semibold text-[#FF6B35] bg-[#FF6B35]/10 px-3 py-1 rounded-full"
+                        initial={{ scale: 0 }}
+                        animate={modulesInView ? { scale: 1 } : {}}
+                        transition={{ delay: 0.6 + (index * 0.15), type: "spring" }}
+                      >
+                        {mod.stats}
+                      </motion.span>
                     </div>
-                    <span className="text-xs font-semibold text-[#FF6B35] bg-[#FF6B35]/10 px-3 py-1 rounded-full">
-                      {mod.stats}
-                    </span>
-                  </div>
-                  <CardTitle className="font-headline text-2xl">{mod.title}</CardTitle>
-                  <p className="text-sm text-muted-foreground pt-1 font-medium">
-                    {mod.subtitle}
-                  </p>
-                </CardHeader>
-                <CardContent className="flex-grow flex flex-col">
-                  <p className="text-muted-foreground mb-6 leading-relaxed">
-                    {mod.description}
-                  </p>
-                  <ul className="space-y-3">
-                    {mod.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-[#FF6B35] flex-shrink-0 mt-0.5" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+                    <CardTitle className="font-headline text-2xl">{mod.title}</CardTitle>
+                    <p className="text-sm text-muted-foreground pt-1 font-medium">
+                      {mod.subtitle}
+                    </p>
+                  </CardHeader>
+                  <CardContent className="flex-grow flex flex-col">
+                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                      {mod.description}
+                    </p>
+                    <ul className="space-y-3">
+                      {mod.features.map((feature, featureIndex) => (
+                        <motion.li
+                          key={feature}
+                          className="flex items-start gap-3"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={modulesInView ? { opacity: 1, x: 0 } : {}}
+                          transition={{ delay: 0.6 + (index * 0.15) + (featureIndex * 0.05) }}
+                        >
+                          <Check className="w-5 h-5 text-[#FF6B35] flex-shrink-0 mt-0.5" />
+                          <span className="text-sm">{feature}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Workflow Section - IMPROVED STEPS */}
-      <div className="py-20 md:py-32 bg-white">
+      {/* Workflow Section */}
+      <div ref={workflowRef} className="py-20 md:py-32 bg-white overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 md:px-8">
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={workflowInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
             <h2 className="text-3xl md:text-5xl font-bold font-headline mb-4">
               Simple Workflow, Powerful Results
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               See how Freight Sync streamlines your entire operation in just 4 steps
             </p>
-          </div>
+          </motion.div>
 
           <div className="relative">
             {/* Desktop Timeline Line */}
-            <div className="hidden lg:block absolute top-[52px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-[#FF6B35] via-[#FF8C42] to-[#FF6B35]" />
+            <motion.div
+              className="hidden lg:block absolute top-[52px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-[#FF6B35] via-[#FF8C42] to-[#FF6B35]"
+              initial={{ scaleX: 0 }}
+              animate={workflowInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.5, delay: 0.5 }}
+              style={{ transformOrigin: "left" }}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
               {workflowSteps.map((step, index) => (
-                <div key={step.number} className="relative">
+                <motion.div
+                  key={step.number}
+                  className="relative"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={workflowInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.7, delay: 0.6 + (index * 0.2) }}
+                >
                   <div className="text-center">
                     {/* Step Number Circle */}
                     <div className="relative mb-6">
-                      <div className="w-24 h-24 mx-auto bg-gradient-to-br from-[#FF6B35] to-[#FF8C42] rounded-full flex items-center justify-center text-white font-bold text-3xl shadow-lg">
-                        <span className="-mt-4"> {step.number}</span>
-                      </div>
+                      <motion.div
+                        className="w-24 h-24 mx-auto bg-gradient-to-br from-[#FF6B35] to-[#FF8C42] rounded-full flex items-center justify-center text-white font-bold text-3xl shadow-lg"
+                        whileHover={{ scale: 1.1, rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <span className="-mt-4">{step.number}</span>
+                      </motion.div>
                       {/* Icon overlay */}
-                      <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
+                      <motion.div
+                        className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md"
+                        initial={{ scale: 0 }}
+                        animate={workflowInView ? { scale: 1 } : {}}
+                        transition={{ delay: 0.8 + (index * 0.2), type: "spring" }}
+                      >
                         <div className="text-[#FF6B35]">{step.icon}</div>
-                      </div>
+                      </motion.div>
                     </div>
 
                     <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
@@ -284,39 +421,67 @@ export default function FeaturesPage() {
 
                     {/* Arrow for mobile */}
                     {index < workflowSteps.length - 1 && (
-                      <div className="lg:hidden flex justify-center my-6">
+                      <motion.div
+                        className="lg:hidden flex justify-center my-6"
+                        initial={{ opacity: 0 }}
+                        animate={workflowInView ? { opacity: 1 } : {}}
+                        transition={{ delay: 1 + (index * 0.2) }}
+                      >
                         <ChevronRight className="w-6 h-6 text-[#FF6B35] rotate-90" />
-                      </div>
+                      </motion.div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Comparison Table - FIXED HEADER */}
-      <div className="py-20 md:py-32 bg-gray-50">
+      {/* Comparison Table */}
+      <div ref={comparisonRef} className="py-20 md:py-32 bg-gray-50 overflow-hidden">
         <div className="container mx-auto max-w-5xl px-4 md:px-8">
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={comparisonInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
             <h2 className="text-3xl md:text-5xl font-bold font-headline mb-4">
               Traditional vs Freight Sync
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground">
               See why modern transport companies are making the switch
             </p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="grid grid-cols-3">
+          </motion.div>
+
+          <motion.div
+            className="bg-white rounded-2xl shadow-xl overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={comparisonInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.4 }}
+          >
+            <motion.div
+              className="grid grid-cols-3"
+              initial={{ opacity: 0, y: -20 }}
+              animate={comparisonInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.6 }}
+            >
               <div className="p-6 font-semibold bg-gray-100">Features</div>
-              <div className="p-6 text-center font-semibold bg-black-100">Traditional Way</div>
+              <div className="p-6 text-center font-semibold bg-gray-100">Traditional Way</div>
               <div className="p-6 text-center font-semibold bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] text-white">
                 Freight Sync
               </div>
-            </div>
+            </motion.div>
+
             {comparisonData.map((item, index) => (
-              <div key={item.feature} className={`grid grid-cols-3 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+              <motion.div
+                key={item.feature}
+                className={`grid grid-cols-3 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={comparisonInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.7 + (index * 0.05) }}
+              >
                 <div className="p-6 font-medium text-sm">{item.feature}</div>
                 <div className="p-6 text-center">
                   {item.traditional ? (
@@ -326,58 +491,95 @@ export default function FeaturesPage() {
                   )}
                 </div>
                 <div className="p-6 text-center">
-                  <CheckCircle2 className="w-6 h-6 text-green-500 mx-auto" />
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={comparisonInView ? { scale: 1 } : {}}
+                    transition={{ delay: 0.8 + (index * 0.05), type: "spring" }}
+                  >
+                    <CheckCircle2 className="w-6 h-6 text-green-500 mx-auto" />
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
-      {/* FAQs - EXPANDABLE */}
-      <div className="py-20 md:py-32 bg-white">
+
+      {/* FAQs */}
+      <div ref={faqRef} className="py-20 md:py-32 bg-white overflow-hidden">
         <div className="container mx-auto max-w-4xl px-4 md:px-8">
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={faqInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
             <h2 className="text-3xl md:text-5xl font-bold font-headline mb-4">
               Frequently Asked Questions
             </h2>
-          </div>
+          </motion.div>
 
           <Accordion type="single" collapsible defaultValue="item-0" className="space-y-4">
             {faqs.map((faq, index) => (
-              <AccordionItem
+              <motion.div
                 key={index}
-                value={`item-${index}`}
-                className="bg-gray-50 rounded-lg px-6 border-none"
+                initial={{ opacity: 0, y: 20 }}
+                animate={faqInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4 + (index * 0.1) }}
               >
-                <AccordionTrigger className="text-left hover:no-underline py-6">
-                  <span className="font-semibold text-lg">{faq.question}</span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-6">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem
+                  value={`item-${index}`}
+                  className="bg-gray-50 rounded-lg px-6 border-none"
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-6">
+                    <span className="font-semibold text-lg">{faq.question}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
             ))}
           </Accordion>
         </div>
       </div>
 
       {/* Final CTA */}
-      <section className="bg-white">
+      <section ref={ctaRef} className="bg-white overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:px-8">
-          <div className="relative isolate overflow-hidden bg-gray-900 px-4 py-12 sm:px-16 sm:py-20 text-center shadow-2xl rounded-2xl">
-
+          <motion.div
+            className="relative isolate overflow-hidden bg-gray-900 px-4 py-12 sm:px-16 sm:py-20 text-center shadow-2xl rounded-2xl"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={ctaInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
             {/* Headline */}
-            <h2 className="mx-auto max-w-2xl font-headline text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+            <motion.h2
+              className="mx-auto max-w-2xl font-headline text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.4 }}
+            >
               Ready to Transform Your Transport Business?
-            </h2>
+            </motion.h2>
 
             {/* Subtext */}
-            <p className="mx-auto mt-4 sm:mt-6 max-w-xl text-sm sm:text-base md:text-lg leading-6 sm:leading-7 text-gray-300">
+            <motion.p
+              className="mx-auto mt-4 sm:mt-6 max-w-xl text-sm sm:text-base md:text-lg leading-6 sm:leading-7 text-gray-300"
+              initial={{ opacity: 0 }}
+              animate={ctaInView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.6 }}
+            >
               Join 500+ transport companies already saving time and money with Freight Sync
-            </p>
+            </motion.p>
 
             {/* Buttons */}
-            <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-x-6">
+            <motion.div
+              className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-x-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.8 }}
+            >
               <Button
                 size="lg"
                 asChild
@@ -396,12 +598,17 @@ export default function FeaturesPage() {
               >
                 <Link href="/pricing">View Pricing Plans</Link>
               </Button>
-            </div>
+            </motion.div>
 
             {/* Footer note */}
-            <p className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-400">
+            <motion.p
+              className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-400"
+              initial={{ opacity: 0 }}
+              animate={ctaInView ? { opacity: 1 } : {}}
+              transition={{ delay: 1 }}
+            >
               Works for single-branch and multi-location networks.
-            </p>
+            </motion.p>
 
             {/* Background SVG */}
             <svg
@@ -417,7 +624,7 @@ export default function FeaturesPage() {
                 </radialGradient>
               </defs>
             </svg>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

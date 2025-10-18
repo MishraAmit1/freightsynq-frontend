@@ -59,7 +59,7 @@ export default function Hero() {
           shockStrength={5}
           resistance={750}
           returnDuration={1.5}
-          className="opacity-30" // Increased opacity
+          className="opacity-30"
         />
       </div>
 
@@ -73,19 +73,20 @@ export default function Hero() {
       <div className="container mx-auto max-w-7xl px-4 md:px-8 relative z-10">
         <div className="flex justify-center">
           <div className="max-w-4xl text-center">
-            <h1 className="text-4xl md:text-6xl font-headline tracking-tight text-foreground">
+            <h1 className="text-4xl md:text-6xl font-headline tracking-tight text-foreground leading-tight">
               <span className="font-light">Tired of messy bookings?</span>{" "}
               <br className="hidden md:block" />
               <span className="font-semibold">
                 Make your transport operations{" "}
                 <br className="md:hidden" />
-                <span className="inline-block relative ml-1">
-                  {/* Invisible placeholder to maintain width */}
-                  <span className="invisible">{longestWord}</span>
-                  {/* Actual typing text - positioned absolute */}
-                  <span className="absolute left-0 top-0 inline-flex items-center">
+                <span className="inline-block relative ml-1 pb-2" style={{ overflow: 'visible' }}>
+                  {/* Invisible placeholder to maintain width - with proper line height */}
+                  <span className="invisible leading-normal pb-2">{longestWord}</span>
+                  {/* Actual typing text - positioned absolute with overflow visible */}
+                  <span className="absolute left-0 top-0 inline-flex items-baseline" style={{ overflow: 'visible' }}>
                     <span
-                      className="bg-gradient-to-r from-primary to-yellow-400 bg-clip-text text-transparent transition-all duration-300 ease-in-out"
+                      className="bg-gradient-to-r from-primary to-yellow-400 bg-clip-text text-transparent transition-all duration-300 ease-in-out leading-normal"
+                      style={{ overflow: 'visible' }}
                       aria-live="polite"
                     >
                       {displayText}

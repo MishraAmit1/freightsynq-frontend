@@ -3,10 +3,15 @@
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { Sparkles, Monitor } from "lucide-react";
 
 export default function DashboardPreview() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef(null);
+  const isInView = useInView(headingRef, { once: true, margin: "0px", amount: 0.3 });
+
   const [rotateAngle, setRotateAngle] = useState(90);
   const [scale, setScale] = useState(0.8);
   const [opacity, setOpacity] = useState(0.3);
@@ -24,8 +29,8 @@ export default function DashboardPreview() {
       const windowHeight = window.innerHeight;
 
       // FASTER ANIMATION
-      const startPoint = windowHeight * 0.85; // Start a bit later
-      const endPoint = windowHeight * -0.15; // End earlier
+      const startPoint = windowHeight * 0.85;
+      const endPoint = windowHeight * -0.15;
 
       let scrollProgress = 0;
 
@@ -59,38 +64,92 @@ export default function DashboardPreview() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-12 md:py-20 lg:py-32"
-      style={{ minHeight: "90vh" }}
+      className="relative py-8 md:py-12 lg:py-20 overflow-hidden"
+      style={{ minHeight: "auto" }}
     >
       <div
         ref={containerRef}
-        className="min-h-[600px] md:min-h-screen flex flex-col justify-center overflow-hidden"
+        className="min-h-[400px] md:min-h-screen flex flex-col justify-center overflow-hidden"
       >
-        {/* Background gradient */}
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/10 to-background" /> */}
-
-        {/* Floating particles */}
-        {/* <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-20 left-10 w-2 h-2 bg-primary/20 rounded-full animate-pulse" />
-          <div className="absolute top-40 right-20 w-3 h-3 bg-primary/30 rounded-full animate-pulse delay-300" />
-          <div className="absolute bottom-30 left-1/4 w-2 h-2 bg-primary/20 rounded-full animate-pulse delay-700" />
-        </div> */}
-
         <div className="container mx-auto max-w-7xl px-4 md:px-8 relative z-10">
-          {/* Section heading - Always visible */}
-          <div className="text-center mb-6 md:mb-12 lg:mb-16">
-            <h2
-              className="text-2xl md:text-4xl lg:text-5xl font-headline font-semibold text-foreground mb-3 md:mb-4 transition-opacity duration-500"
-              style={{ opacity: Math.max(0.6, opacity) }}
+          {/* Section heading */}
+          <div ref={headingRef} className="text-center mb-4 md:mb-12 lg:mb-16">
+            {/* Badge */}
+            <motion.div
+              className="flex justify-center mb-3 md:mb-6"
+              initial={{ scale: 0 }}
+              animate={isInView ? { scale: 1 } : {}}
+              transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
             >
-              Your Dashboard Comes to Life
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10">
+                <Monitor className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-primary">Live Dashboard</span>
+              </div>
+            </motion.div>
+
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-headline font-semibold text-foreground mb-2 md:mb-3 lg:mb-4">
+              <motion.span
+                className="inline-block mr-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                Your Dashboard {" "}
+              </motion.span>
+              <span className="relative inline-block">
+                <motion.span
+                  className="relative z-10 font-black"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  Comes to Life
+                </motion.span>
+
+                {/* Nike Swoosh */}
+                <svg
+                  className="absolute -bottom-1 md:-bottom-2 left-0 w-full h-6 md:h-8 z-0"
+                  viewBox="0 0 300 30"
+                  preserveAspectRatio="none"
+                >
+                  <motion.path
+                    d="M 0 20 Q 75 8, 150 12 T 300 8"
+                    stroke="url(#dashboard-gradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
+                    transition={{ duration: 2, ease: "easeInOut", delay: 1 }}
+                  />
+                  <defs>
+                    <linearGradient id="dashboard-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#fb923c" />
+                      <stop offset="100%" stopColor="#f97316" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Sparkle */}
+                <motion.span
+                  className="absolute -top-1 -right-2 md:-top-2 md:-right-3 inline-block"
+                  initial={{ scale: 0, rotate: 0 }}
+                  animate={isInView ? { scale: 1, rotate: 360 } : {}}
+                  transition={{ duration: 0.6, delay: 1.4, type: "spring" }}
+                >
+                  <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
+                </motion.span>
+              </span>
             </h2>
-            <p
-              className="text-base md:text-lg text-muted-foreground transition-opacity duration-500"
-              style={{ opacity: Math.max(0.5, opacity) }}
+
+            <motion.p
+              className="text-sm md:text-base lg:text-lg text-muted-foreground px-4 md:px-0"
+              initial={{ opacity: 0 }}
+              animate={isInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
             >
               Watch as your messy operations transform into organized brilliance
-            </p>
+            </motion.p>
           </div>
 
           {/* Dashboard container */}
@@ -98,18 +157,9 @@ export default function DashboardPreview() {
             className="relative flex justify-center items-center"
             style={{
               perspective: "2000px",
-              minHeight: "300px"
+              minHeight: "200px"
             }}
           >
-            {/* Glow effect */}
-            <div
-              className="absolute inset-0 blur-3xl pointer-events-none"
-              style={{
-                opacity: opacity * 0.5,
-                transform: `scale(${1.2 - rotateAngle / 450})`
-              }}
-            />
-
             {/* Main dashboard */}
             <div
               className="relative transition-none w-full max-w-6xl"
@@ -124,53 +174,88 @@ export default function DashboardPreview() {
                 willChange: "transform, opacity"
               }}
             >
-              {/* Shadow */}
-              <div
-                className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-full h-20 bg-black/20 blur-3xl pointer-events-none"
-                style={{
-                  transform: `scaleX(${1 - rotateAngle / 180}) translateZ(-50px)`,
-                  opacity: 1 - rotateAngle / 90
-                }}
-              />
-
               {/* Dashboard frame */}
-              <div className="relative rounded-xl md:rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-b from-slate-900 to-slate-800 p-1">
+              <div className="relative rounded-xl md:rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800 p-1">
                 {/* Browser bar */}
-                <div className="bg-slate-800 rounded-t-xl md:rounded-t-2xl px-3 md:px-4 py-1.5 md:py-2 flex items-center gap-2">
+                <div className="bg-slate-800 rounded-t-xl md:rounded-t-2xl px-3 md:px-4 py-1.5 md:py-2 flex items-center gap-2 relative z-10">
                   <div className="flex gap-1 md:gap-1.5">
-                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-500" />
-                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-yellow-500" />
-                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500" />
+                    <motion.div
+                      className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-500"
+                      whileHover={{ scale: 1.2 }}
+                    />
+                    <motion.div
+                      className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-yellow-500"
+                      whileHover={{ scale: 1.2 }}
+                    />
+                    <motion.div
+                      className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500"
+                      whileHover={{ scale: 1.2 }}
+                    />
                   </div>
                   <div className="flex-1 flex justify-center">
-                    <div className="bg-slate-700 rounded px-2 md:px-4 py-0.5 md:py-1 text-[10px] md:text-xs text-slate-300">
+                    <div className="bg-slate-700 rounded px-2 md:px-4 py-0.5 md:py-1 text-[10px] md:text-xs text-slate-300 flex items-center gap-1">
+                      <motion.span
+                        animate={{ opacity: [1, 0.5, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        🔒
+                      </motion.span>
                       app.freightsync.com
                     </div>
                   </div>
                 </div>
 
                 {/* Dashboard image */}
-                <Image
-                  src={image.imageUrl}
-                  alt={image.description}
-                  width={1200}
-                  height={675}
-                  className="rounded-b-xl md:rounded-b-2xl w-full h-auto"
-                  priority
-                  data-ai-hint={image.imageHint}
-                />
+                <div className="relative">
+                  <Image
+                    src={image.imageUrl}
+                    alt={image.description}
+                    width={1200}
+                    height={675}
+                    className="rounded-b-xl md:rounded-b-2xl w-full h-auto"
+                    priority
+                    data-ai-hint={image.imageHint}
+                  />
+                </div>
               </div>
 
               {/* Floating badges */}
-              <div
-                className="absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-green-500 text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-semibold shadow-lg pointer-events-none"
+              <motion.div
+                className="hidden md:block absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-semibold pointer-events-none"
                 style={{
                   opacity: 1 - rotateAngle / 90,
                   transform: `translateZ(50px) scale(${1 - rotateAngle / 180})`
                 }}
+                animate={{
+                  y: [0, -5, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                Live Tracking
-              </div>
+                ✓ Live Tracking
+              </motion.div>
+
+              <motion.div
+                className="hidden md:block absolute bottom-2 -left-2 md:bottom-0 md:-left-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-semibold pointer-events-none"
+                style={{
+                  opacity: 1 - rotateAngle / 90,
+                  transform: `translateZ(50px) scale(${1 - rotateAngle / 180})`
+                }}
+                animate={{
+                  y: [0, 5, 0],
+                }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5
+                }}
+              >
+                ⚡ Real-time Sync
+              </motion.div>
             </div>
           </div>
         </div>

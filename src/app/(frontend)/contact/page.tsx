@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { submitContactForm, contactReasons } from "@/lib/api/contact";
 import toast from 'react-hot-toast';
 import { Button } from "@/components/ui/button";
@@ -19,9 +19,11 @@ import {
   Users,
   Building2,
   Check,
-  Loader2
+  Loader2,
+  Sparkles
 } from "lucide-react";
 import Link from "next/link";
+import { motion, useInView } from "framer-motion";
 
 const quickContacts = [
   {
@@ -59,6 +61,16 @@ export default function ContactPage() {
     reason: "demo" as 'demo' | 'sales' | 'support' | 'other',
     message: ""
   });
+
+  const heroRef = useRef(null);
+  const quickContactRef = useRef(null);
+  const formRef = useRef(null);
+  const ctaRef = useRef(null);
+
+  const heroInView = useInView(heroRef, { once: true, margin: "0px", amount: 0.3 });
+  const quickContactInView = useInView(quickContactRef, { once: true, margin: "0px", amount: 0.3 });
+  const formInView = useInView(formRef, { once: true, margin: "0px", amount: 0.1 });
+  const ctaInView = useInView(ctaRef, { once: true, margin: "0px", amount: 0.3 });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,75 +148,160 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16 md:py-24">
+      <div ref={heroRef} className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16 md:py-24 overflow-hidden">
         <div className="container max-w-7xl px-4 md:px-8">
           <div className="max-w-3xl">
-            <h1 className="text-white text-4xl md:text-6xl font-bold font-headline tracking-tight">
-              Let's Get Started
-              <br />
-              <span className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] bg-clip-text text-transparent">
-                Together
+            <motion.h1
+              className="text-white text-4xl md:text-6xl font-bold font-headline tracking-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <motion.span
+                className="block"
+                initial={{ opacity: 0, x: -20 }}
+                animate={heroInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                Let's Get Started
+              </motion.span>
+              <span className="relative inline-block">
+                <motion.span
+                  className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] bg-clip-text text-transparent font-black"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  Together
+                </motion.span>
+
+                {/* Nike Swoosh */}
+                <svg
+                  className="absolute -bottom-3 left-0 w-full h-8 z-0"
+                  viewBox="0 0 200 30"
+                  preserveAspectRatio="none"
+                >
+                  <motion.path
+                    d="M 0 20 Q 50 8, 100 12 T 200 8"
+                    stroke="url(#contact-gradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={heroInView ? { pathLength: 1 } : { pathLength: 0 }}
+                    transition={{ duration: 2, ease: "easeInOut", delay: 1 }}
+                  />
+                  <defs>
+                    <linearGradient id="contact-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#FF6B35" />
+                      <stop offset="100%" stopColor="#FF8C42" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Sparkle */}
+                <motion.span
+                  className="absolute -top-2 -right-3 inline-block"
+                  initial={{ scale: 0, rotate: 0 }}
+                  animate={heroInView ? { scale: 1, rotate: 360 } : {}}
+                  transition={{ duration: 0.6, delay: 1.4, type: "spring" }}
+                >
+                  <Sparkles className="w-5 h-5 text-[#FF8C42]" />
+                </motion.span>
               </span>
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-gray-300 leading-relaxed">
+            </motion.h1>
+
+            <motion.p
+              className="mt-6 text-lg md:text-xl text-gray-300 leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={heroInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
               Have questions about Freight Sync? Want to see a demo?
               We're here to help you transform your transport business.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 text-gray-400">
-                <Clock className="w-5 h-5" />
-                <span>Response within 2 hours</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400">
-                <Calendar className="w-5 h-5" />
-                <span>Demo available today</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400">
-                <Users className="w-5 h-5" />
-                <span>Expert team</span>
-              </div>
-            </div>
+            </motion.p>
+
+            <motion.div
+              className="mt-8 flex flex-wrap gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 1 }}
+            >
+              {[
+                { icon: Clock, text: "Response within 2 hours" },
+                { icon: Calendar, text: "Demo available today" },
+                { icon: Users, text: "Expert team" }
+              ].map((item, index) => (
+                <motion.div
+                  key={item.text}
+                  className="flex items-center gap-2 text-gray-400"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={heroInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 1.2 + (index * 0.1) }}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span>{item.text}</span>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </div>
 
       {/* Quick Contact Cards */}
-      <div className="py-16 bg-white border-b">
+      <div ref={quickContactRef} className="py-16 bg-white border-b overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {quickContacts.map((contact) => (
-              <Card key={contact.title} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-lg text-[#FF6B35]">
-                      {contact.icon}
-                    </div>
-                    <div className="flex-grow">
-                      <h3 className="font-semibold mb-1">{contact.title}</h3>
-                      <a
-                        href={contact.action}
-                        className="text-[#FF6B35] font-medium hover:underline"
+            {quickContacts.map((contact, index) => (
+              <motion.div
+                key={contact.title}
+                initial={{ opacity: 0, y: 30 }}
+                animate={quickContactInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.2 + (index * 0.15) }}
+                whileHover={{ y: -5, scale: 1.02 }}
+              >
+                <Card className="hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <motion.div
+                        className="p-3 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-lg text-[#FF6B35]"
+                        whileHover={{ rotate: 360, scale: 1.1 }}
+                        transition={{ duration: 0.6 }}
                       >
-                        {contact.value}
-                      </a>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {contact.description}
-                      </p>
+                        {contact.icon}
+                      </motion.div>
+                      <div className="flex-grow">
+                        <h3 className="font-semibold mb-1">{contact.title}</h3>
+                        <a
+                          href={contact.action}
+                          className="text-[#FF6B35] font-medium hover:underline"
+                        >
+                          {contact.value}
+                        </a>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {contact.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
 
       {/* Main Contact Section */}
-      <div className="py-20 md:py-32 bg-gray-50">
+      <div ref={formRef} className="py-20 md:py-32 bg-gray-50 overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 md:px-8">
           <div className="grid lg:grid-cols-5 gap-12">
             {/* Contact Form */}
-            <div className="lg:col-span-3">
+            <motion.div
+              className="lg:col-span-3"
+              initial={{ opacity: 0, x: -50 }}
+              animate={formInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
               <Card className="shadow-xl">
                 <CardHeader>
                   <CardTitle className="text-2xl font-headline">Send us a Message</CardTitle>
@@ -215,7 +312,12 @@ export default function ContactPage() {
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Name Fields */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <motion.div
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={formInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.4 }}
+                    >
                       <div className="space-y-2">
                         <Label htmlFor="firstName">First Name *</Label>
                         <Input
@@ -238,10 +340,15 @@ export default function ContactPage() {
                           disabled={loading}
                         />
                       </div>
-                    </div>
+                    </motion.div>
 
                     {/* Contact Fields */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <motion.div
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={formInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.5 }}
+                    >
                       <div className="space-y-2">
                         <Label htmlFor="email">Email Address *</Label>
                         <Input
@@ -266,10 +373,15 @@ export default function ContactPage() {
                           disabled={loading}
                         />
                       </div>
-                    </div>
+                    </motion.div>
 
                     {/* Company Fields */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <motion.div
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={formInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.6 }}
+                    >
                       <div className="space-y-2">
                         <Label htmlFor="company">Company Name</Label>
                         <Input
@@ -296,10 +408,15 @@ export default function ContactPage() {
                           <option value="100+ vehicles">100+ vehicles</option>
                         </select>
                       </div>
-                    </div>
+                    </motion.div>
 
                     {/* Reason for Contact */}
-                    <div className="space-y-2">
+                    <motion.div
+                      className="space-y-2"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={formInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.7 }}
+                    >
                       <Label>How can we help you? *</Label>
                       <RadioGroup
                         value={formData.reason}
@@ -317,10 +434,15 @@ export default function ContactPage() {
                           ))}
                         </div>
                       </RadioGroup>
-                    </div>
+                    </motion.div>
 
                     {/* Message */}
-                    <div className="space-y-2">
+                    <motion.div
+                      className="space-y-2"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={formInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.8 }}
+                    >
                       <Label htmlFor="message">Your Message *</Label>
                       <Textarea
                         id="message"
@@ -331,26 +453,32 @@ export default function ContactPage() {
                         required
                         disabled={loading}
                       />
-                    </div>
+                    </motion.div>
 
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full bg-gradient-to-r from-[#FF6B35] to-[#FF8C42]"
-                      disabled={loading}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={formInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.9 }}
                     >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          Send Message
-                          <ArrowRight className="ml-2 w-4 h-4" />
-                        </>
-                      )}
-                    </Button>
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-[#FF6B35] to-[#FF8C42]"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            Send Message
+                            <ArrowRight className="ml-2 w-4 h-4" />
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
 
                     <p className="text-xs text-center text-muted-foreground">
                       By submitting this form, you agree to our{" "}
@@ -359,116 +487,142 @@ export default function ContactPage() {
                   </form>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
 
             {/* Right Side Info */}
             <div className="lg:col-span-2 space-y-8">
               {/* Office Location */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Building2 className="w-5 h-5 text-[#FF6B35]" />
-                    Head Office
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="font-semibold mb-2">Address</p>
-                      <p className="text-muted-foreground">
-                        123 Logistics Lane, Transport Nagar,<br />
-                        Bangalore, Karnataka 560001,<br />
-                        India
-                      </p>
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={formInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.4 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Building2 className="w-5 h-5 text-[#FF6B35]" />
+                      Head Office
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="font-semibold mb-2">Address</p>
+                        <p className="text-muted-foreground">
+                          123 Logistics Lane, Transport Nagar,<br />
+                          Bangalore, Karnataka 560001,<br />
+                          India
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-2">Office Hours</p>
+                        <p className="text-muted-foreground">
+                          Monday - Saturday: 9:00 AM - 7:00 PM<br />
+                          Sunday: Closed
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold mb-2">Office Hours</p>
-                      <p className="text-muted-foreground">
-                        Monday - Saturday: 9:00 AM - 7:00 PM<br />
-                        Sunday: Closed
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               {/* Why Choose Us */}
-              <Card className="bg-gradient-to-br from-[#FF6B35]/5 to-[#FF8C42]/5 border-[#FF6B35]/20">
-                <CardHeader>
-                  <CardTitle>Why Contact Us?</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#FF6B35] mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Free Demo</p>
-                      <p className="text-sm text-muted-foreground">
-                        See Freight Sync in action with your data
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#FF6B35] mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Expert Consultation</p>
-                      <p className="text-sm text-muted-foreground">
-                        Get personalized advice for your business
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#FF6B35] mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Custom Pricing</p>
-                      <p className="text-sm text-muted-foreground">
-                        Special packages for large fleets
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#FF6B35] mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Migration Support</p>
-                      <p className="text-sm text-muted-foreground">
-                        We'll help move your existing data
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={formInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.6 }}
+              >
+                <Card className="bg-gradient-to-br from-[#FF6B35]/5 to-[#FF8C42]/5 border-[#FF6B35]/20">
+                  <CardHeader>
+                    <CardTitle>Why Contact Us?</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {[
+                      { title: "Free Demo", desc: "See Freight Sync in action with your data" },
+                      { title: "Expert Consultation", desc: "Get personalized advice for your business" },
+                      { title: "Custom Pricing", desc: "Special packages for large fleets" },
+                      { title: "Migration Support", desc: "We'll help move your existing data" }
+                    ].map((item, index) => (
+                      <motion.div
+                        key={item.title}
+                        className="flex items-start gap-3"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={formInView ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.8 + (index * 0.1) }}
+                      >
+                        <Check className="w-5 h-5 text-[#FF6B35] mt-0.5" />
+                        <div>
+                          <p className="font-semibold">{item.title}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               {/* Map */}
-              <Card>
-                <CardContent className="p-0">
-                  <div className="aspect-video rounded-lg overflow-hidden">
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.012573289233!2d77.59456231528652!3d12.97159869085593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b9b3f3%3A0x1d4bde4a4a5a2a2c!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1676458532431!5m2!1sen!2sin"
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen={false}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={formInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.8 }}
+              >
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="aspect-video rounded-lg overflow-hidden">
+                      <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.012573289233!2d77.59456231528652!3d12.97159869085593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b9b3f3%3A0x1d4bde4a4a5a2a2c!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1676458532431!5m2!1sen!2sin"
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen={false}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Final CTA */}
-      <section className="bg-white">
+      <section ref={ctaRef} className="bg-white overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:px-8">
-          <div className="relative isolate overflow-hidden bg-gray-900 px-4 py-12 sm:px-16 sm:py-20 text-center shadow-2xl rounded-2xl">
-            <h2 className="mx-auto max-w-2xl font-headline text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+          <motion.div
+            className="relative isolate overflow-hidden bg-gray-900 px-4 py-12 sm:px-16 sm:py-20 text-center shadow-2xl rounded-2xl"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={ctaInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <motion.h2
+              className="mx-auto max-w-2xl font-headline text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.4 }}
+            >
               Prefer a Quick Call?
-            </h2>
-            <p className="mx-auto mt-4 sm:mt-6 max-w-xl text-sm sm:text-base md:text-lg leading-6 sm:leading-7 text-gray-300">
+            </motion.h2>
+
+            <motion.p
+              className="mx-auto mt-4 sm:mt-6 max-w-xl text-sm sm:text-base md:text-lg leading-6 sm:leading-7 text-gray-300"
+              initial={{ opacity: 0 }}
+              animate={ctaInView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.6 }}
+            >
               Our transport experts are available to discuss your needs right now
-            </p>
-            <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-x-6">
+            </motion.p>
+
+            <motion.div
+              className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-x-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.8 }}
+            >
               <Button
                 size="lg"
                 asChild
@@ -490,10 +644,17 @@ export default function ContactPage() {
                   WhatsApp Us
                 </a>
               </Button>
-            </div>
-            <p className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-400">
+            </motion.div>
+
+            <motion.p
+              className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-400"
+              initial={{ opacity: 0 }}
+              animate={ctaInView ? { opacity: 1 } : {}}
+              transition={{ delay: 1 }}
+            >
               Available Mon-Sat, 9 AM - 7 PM IST
-            </p>
+            </motion.p>
+
             <svg
               viewBox="0 0 1024 1024"
               className="absolute left-1/2 top-1/2 -z-10 w-[200vw] h-[200vw] sm:w-[64rem] sm:h-[64rem] -translate-x-1/2"
@@ -507,7 +668,7 @@ export default function ContactPage() {
                 </radialGradient>
               </defs>
             </svg>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

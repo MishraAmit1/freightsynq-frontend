@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Check,
   ArrowRight,
@@ -32,6 +32,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Link from "next/link";
+import { motion, useInView } from "framer-motion";
 
 const tiers = [
   {
@@ -147,6 +148,18 @@ const faqs = [
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(true);
 
+  const heroRef = useRef(null);
+  const pricingRef = useRef(null);
+  const trustRef = useRef(null);
+  const faqRef = useRef(null);
+  const ctaRef = useRef(null);
+
+  const heroInView = useInView(heroRef, { once: true, margin: "0px", amount: 0.3 });
+  const pricingInView = useInView(pricingRef, { once: true, margin: "0px", amount: 0.1 });
+  const trustInView = useInView(trustRef, { once: true, margin: "0px", amount: 0.2 });
+  const faqInView = useInView(faqRef, { once: true, margin: "0px", amount: 0.2 });
+  const ctaInView = useInView(ctaRef, { once: true, margin: "0px", amount: 0.3 });
+
   const formatPrice = (price: number | string) => {
     if (typeof price === "string") return price;
     return `₹${price.toLocaleString('en-IN')}`;
@@ -155,40 +168,110 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16 md:py-24">
+      <div ref={heroRef} className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16 md:py-24 overflow-hidden">
         <div className="container max-w-7xl px-4 md:px-8">
           <div className="max-w-3xl">
-            <h1 className="text-white text-4xl md:text-6xl font-bold font-headline tracking-tight">
-              Simple Pricing,
-              <br />
-              <span className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] bg-clip-text text-transparent">
-                No Surprises
+            <motion.h1
+              className="text-white text-4xl md:text-6xl font-bold font-headline tracking-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <motion.span
+                className="block"
+                initial={{ opacity: 0, x: -20 }}
+                animate={heroInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                Simple Pricing,
+              </motion.span>
+              <span className="relative inline-block">
+                <motion.span
+                  className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] bg-clip-text text-transparent font-black"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  No Surprises
+                </motion.span>
+
+                {/* Nike Swoosh */}
+                <svg
+                  className="absolute -bottom-3 left-0 w-full h-8 z-0"
+                  viewBox="0 0 250 30"
+                  preserveAspectRatio="none"
+                >
+                  <motion.path
+                    d="M 0 20 Q 60 10, 128 12 T 250 8"
+                    stroke="url(#pricing-gradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={heroInView ? { pathLength: 1 } : { pathLength: 0 }}
+                    transition={{ duration: 2, ease: "easeInOut", delay: 1 }}
+                  />
+                  <defs>
+                    <linearGradient id="pricing-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#FF6B35" />
+                      <stop offset="100%" stopColor="#FF8C42" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Sparkle */}
+                <motion.span
+                  className="absolute -top-1 -right-3 inline-block"
+                  initial={{ scale: 0, rotate: 0 }}
+                  animate={heroInView ? { scale: 1, rotate: 360 } : {}}
+                  transition={{ duration: 0.6, delay: 1.4, type: "spring" }}
+                >
+                  <Sparkles className="w-5 h-5 text-[#FF8C42]" />
+                </motion.span>
               </span>
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-gray-300 leading-relaxed">
+            </motion.h1>
+
+            <motion.p
+              className="mt-6 text-lg md:text-xl text-gray-300 leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={heroInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
               Choose the perfect plan for your transport business.
               Start with a 7-day free trial. No credit card required.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            </motion.p>
+
+            <motion.div
+              className="mt-8 flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 1 }}
+            >
               <Button size="lg" asChild className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42]">
                 <Link href="/contact">
                   Start Free Trial
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="border-white text-black hover:bg-white/10 hover:text-white">
+              <Button size="lg" variant="outline" asChild className="border-white hover:text-white hover:bg-white/10">
+
                 <Link href="/contact">Schedule Demo</Link>
               </Button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
 
       {/* Pricing Cards Section */}
-      <div className="py-20 md:py-32 bg-gray-50">
+      <div ref={pricingRef} className="py-20 md:py-32 bg-gray-50 overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 md:px-8">
           {/* Billing Toggle */}
-          <div className="flex justify-center items-center space-x-4 mb-16">
+          <motion.div
+            className="flex justify-center items-center space-x-4 mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={pricingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             <Label
               htmlFor="billing-cycle"
               className={`text-base font-medium ${!isYearly ? 'text-foreground' : 'text-muted-foreground'}`}
@@ -206,149 +289,226 @@ export default function PricingPage() {
               className={`flex items-center text-base font-medium ${isYearly ? 'text-foreground' : 'text-muted-foreground'}`}
             >
               Yearly
-              <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+              <motion.span
+                className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
+                initial={{ scale: 0 }}
+                animate={pricingInView ? { scale: 1 } : {}}
+                transition={{ type: "spring", delay: 0.4 }}
+              >
                 Save 20%
-              </span>
+              </motion.span>
             </Label>
-          </div>
+          </motion.div>
 
           {/* Pricing Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {tiers.map((tier) => (
-              <Card
+            {tiers.map((tier, index) => (
+              <motion.div
                 key={tier.name}
-                className={`relative flex flex-col h-full transition-all duration-300 ${tier.highlighted
-                  ? 'border-2 border-[#FF6B35] shadow-2xl scale-105'
-                  : 'hover:shadow-xl'
-                  }`}
+                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                animate={pricingInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.4 + (index * 0.15),
+                  ease: "easeOut"
+                }}
+                whileHover={{ y: -10, scale: 1.02 }}
               >
-                {tier.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] text-white text-xs font-semibold px-4 py-1 rounded-full">
-                      {tier.badge}
-                    </span>
-                  </div>
-                )}
-
-                <CardHeader className="pb-4">
-                  <div className="p-4 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-xl w-fit mb-4">
-                    {tier.icon}
-                  </div>
-                  <CardTitle className="font-headline text-2xl">{tier.name}</CardTitle>
-                  <CardDescription className="text-base pt-2">
-                    {tier.description}
-                  </CardDescription>
-
-                  <div className="pt-6">
-                    <div className="flex items-baseline">
-                      <span className="text-4xl font-bold">
-                        {typeof tier.price === "string"
-                          ? tier.price
-                          : formatPrice(isYearly ? tier.price.yearly : tier.price.monthly)
-                        }
+                <Card
+                  className={`relative flex flex-col h-full transition-all duration-500 ${tier.highlighted
+                    ? 'border-2 border-[#FF6B35] shadow-2xl scale-105'
+                    : 'hover:shadow-xl'
+                    }`}
+                >
+                  {tier.badge && (
+                    <motion.div
+                      className="absolute -top-3 left-1/2 -translate-x-1/2"
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={pricingInView ? { scale: 1, rotate: 0 } : {}}
+                      transition={{ delay: 0.8, type: "spring" }}
+                    >
+                      <span className="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] text-white text-xs font-semibold px-4 py-1 rounded-full">
+                        {tier.badge}
                       </span>
-                      {typeof tier.price !== "string" && (
-                        <span className="ml-2 text-muted-foreground">
-                          {isYearly ? '/year' : '/month'}
+                    </motion.div>
+                  )}
+
+                  <CardHeader className="pb-4">
+                    <motion.div
+                      className="p-4 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-xl w-fit mb-4"
+                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      {tier.icon}
+                    </motion.div>
+                    <CardTitle className="font-headline text-2xl">{tier.name}</CardTitle>
+                    <CardDescription className="text-base pt-2">
+                      {tier.description}
+                    </CardDescription>
+
+                    <div className="pt-6">
+                      <motion.div
+                        className="flex items-baseline"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={pricingInView ? { scale: 1, opacity: 1 } : {}}
+                        transition={{ delay: 0.6 + (index * 0.15), type: "spring" }}
+                      >
+                        <span className="text-4xl font-bold">
+                          {typeof tier.price === "string"
+                            ? tier.price
+                            : formatPrice(isYearly ? tier.price.yearly : tier.price.monthly)
+                          }
                         </span>
+                        {typeof tier.price !== "string" && (
+                          <span className="ml-2 text-muted-foreground">
+                            {isYearly ? '/year' : '/month'}
+                          </span>
+                        )}
+                      </motion.div>
+                      {typeof tier.price !== "string" && isYearly && (
+                        <motion.p
+                          className="mt-2 text-sm text-green-600"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.8 }}
+                        >
+                          Save {formatPrice(tier.price.monthly * 12 - tier.price.yearly)} annually
+                        </motion.p>
                       )}
                     </div>
-                    {typeof tier.price !== "string" && isYearly && (
-                      <p className="mt-2 text-sm text-green-600">
-                        Save {formatPrice(tier.price.monthly * 12 - tier.price.yearly)} annually
-                      </p>
-                    )}
-                  </div>
-                </CardHeader>
+                  </CardHeader>
 
-                <CardContent className="flex-grow flex flex-col">
-                  <ul className="space-y-3 flex-grow">
-                    {tier.features.map((feature) => (
-                      <li key={feature} className="flex items-start">
-                        <Check className="w-5 h-5 text-[#FF6B35] mt-0.5 mr-3 flex-shrink-0" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <CardContent className="flex-grow flex flex-col">
+                    <ul className="space-y-3 flex-grow">
+                      {tier.features.map((feature, featureIndex) => (
+                        <motion.li
+                          key={feature}
+                          className="flex items-start"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={pricingInView ? { opacity: 1, x: 0 } : {}}
+                          transition={{ delay: 0.7 + (index * 0.15) + (featureIndex * 0.05) }}
+                        >
+                          <Check className="w-5 h-5 text-[#FF6B35] mt-0.5 mr-3 flex-shrink-0" />
+                          <span className="text-sm">{feature}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
 
-                  <Button
-                    className={`mt-8 w-full ${tier.highlighted
-                      ? 'bg-gradient-to-r from-[#FF6B35] to-[#FF8C42]'
-                      : ''
-                      }`}
-                    variant={tier.highlighted ? "default" : "outline"}
-                    size="lg"
-                    asChild
-                  >
-                    <Link href="/contact">
-                      {tier.cta}
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
+                    <Button
+                      className={`mt-8 w-full ${tier.highlighted
+                        ? 'bg-gradient-to-r from-[#FF6B35] to-[#FF8C42]'
+                        : ''
+                        }`}
+                      variant={tier.highlighted ? "default" : "outline"}
+                      size="lg"
+                      asChild
+                    >
+                      <Link href="/contact">
+                        {tier.cta}
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
 
       {/* Trust Features Section */}
-      <div className="py-20 md:py-32 bg-white">
+      <div ref={trustRef} className="py-20 md:py-32 bg-white overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 md:px-8">
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={trustInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
             <h2 className="text-3xl md:text-5xl font-bold font-headline mb-4">
               Why Teams Trust Freight Sync
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
               We're committed to your success with transparent pricing and reliable service
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {trustFeatures.map((feature) => (
-              <div key={feature.title} className="text-center group">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-full mb-4 group-hover:scale-110 transition-transform">
+            {trustFeatures.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                className="text-center group"
+                initial={{ opacity: 0, y: 30 }}
+                animate={trustInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4 + (index * 0.1) }}
+              >
+                <motion.div
+                  className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#FF6B35]/10 to-[#FF8C42]/10 rounded-full mb-4"
+                  whileHover={{ scale: 1.2, rotate: 360 }}
+                  transition={{ duration: 0.6 }}
+                >
                   <div className="text-[#FF6B35]">{feature.icon}</div>
-                </div>
+                </motion.div>
                 <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
 
       {/* FAQs Section */}
-      <div className="py-20 md:py-32 bg-gray-50">
+      <div ref={faqRef} className="py-20 md:py-32 bg-gray-50 overflow-hidden">
         <div className="container mx-auto max-w-4xl px-4 md:px-8">
-          <div className="text-center mb-16">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={faqInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
             <h2 className="text-3xl md:text-5xl font-bold font-headline mb-4">
               Common Questions
             </h2>
             <p className="text-lg text-muted-foreground">
               Everything you need to know about our pricing
             </p>
-          </div>
+          </motion.div>
 
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
-              <AccordionItem
+              <motion.div
                 key={index}
-                value={`item-${index}`}
-                className="bg-white rounded-xl px-6 border border-gray-200 hover:shadow-md transition-shadow"
+                initial={{ opacity: 0, y: 20 }}
+                animate={faqInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4 + (index * 0.1) }}
               >
-                <AccordionTrigger className="text-left hover:no-underline py-6">
-                  <span className="font-semibold text-lg">{faq.question}</span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-6 text-base">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem
+                  value={`item-${index}`}
+                  className="bg-white rounded-xl px-6 border border-gray-200 hover:shadow-md transition-shadow"
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-6">
+                    <span className="font-semibold text-lg">{faq.question}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6 text-base">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
             ))}
           </Accordion>
 
-          <div className="mt-12 p-8 bg-gradient-to-br from-[#FF6B35]/5 to-[#FF8C42]/5 rounded-2xl text-center border border-[#FF6B35]/10">
-            <HeadphonesIcon className="w-12 h-12 text-[#FF6B35] mx-auto mb-4" />
+          <motion.div
+            className="mt-12 p-8 bg-gradient-to-br from-[#FF6B35]/5 to-[#FF8C42]/5 rounded-2xl text-center border border-[#FF6B35]/10"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={faqInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: 1, duration: 0.6 }}
+          >
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <HeadphonesIcon className="w-12 h-12 text-[#FF6B35] mx-auto mb-4" />
+            </motion.div>
             <h3 className="font-semibold text-xl mb-2">Still have questions?</h3>
             <p className="text-muted-foreground mb-6">Our team is here to help you choose the right plan</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -363,21 +523,43 @@ export default function PricingPage() {
                 </a>
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Final CTA */}
-      <section className="bg-white">
+      <section ref={ctaRef} className="bg-white overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:px-8">
-          <div className="relative isolate overflow-hidden bg-gray-900 px-4 py-12 sm:px-16 sm:py-20 text-center shadow-2xl rounded-2xl">
-            <h2 className="mx-auto max-w-2xl font-headline text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+          <motion.div
+            className="relative isolate overflow-hidden bg-gray-900 px-4 py-12 sm:px-16 sm:py-20 text-center shadow-2xl rounded-2xl"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={ctaInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <motion.h2
+              className="mx-auto max-w-2xl font-headline text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.4 }}
+            >
               Ready to modernize your transport business?
-            </h2>
-            <p className="mx-auto mt-4 sm:mt-6 max-w-xl text-sm sm:text-base md:text-lg leading-6 sm:leading-7 text-gray-300">
+            </motion.h2>
+
+            <motion.p
+              className="mx-auto mt-4 sm:mt-6 max-w-xl text-sm sm:text-base md:text-lg leading-6 sm:leading-7 text-gray-300"
+              initial={{ opacity: 0 }}
+              animate={ctaInView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.6 }}
+            >
               Join 500+ transport companies. Start your 7-day free trial today.
-            </p>
-            <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-x-6">
+            </motion.p>
+
+            <motion.div
+              className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-x-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.8 }}
+            >
               <Button
                 size="lg"
                 asChild
@@ -393,10 +575,17 @@ export default function PricingPage() {
               >
                 <Link href="/contact">Talk to Sales</Link>
               </Button>
-            </div>
-            <p className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-400">
+            </motion.div>
+
+            <motion.p
+              className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-400"
+              initial={{ opacity: 0 }}
+              animate={ctaInView ? { opacity: 1 } : {}}
+              transition={{ delay: 1 }}
+            >
               No credit card required • Cancel anytime
-            </p>
+            </motion.p>
+
             <svg
               viewBox="0 0 1024 1024"
               className="absolute left-1/2 top-1/2 -z-10 w-[200vw] h-[200vw] sm:w-[64rem] sm:h-[64rem] -translate-x-1/2"
@@ -410,7 +599,7 @@ export default function PricingPage() {
                 </radialGradient>
               </defs>
             </svg>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>
